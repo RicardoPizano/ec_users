@@ -73,7 +73,7 @@ $ docker pull ec_msusers:latest
 #### Crear contenedor
 
 ``` bash
-$ docker run -d -p --name container_ec_msusers ${puerto}:80 ec_msusers 
+$ docker run -d -p ${puerto}:80 --name container_ec_msusers ec_msusers 
 ```
 ## Edpoints
 
