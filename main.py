@@ -8,6 +8,7 @@ import utils
 
 from constans import MONGO_URL
 from models.requests import UserRequest
+from models.responses import UserResponse
 from repositories import db
 
 app = FastAPI()
@@ -18,8 +19,10 @@ client = pymongo.MongoClient(MONGO_URL)
 db_session = client.ecdb_comics
 
 
-@app.post("/users")
-async def create_user(r: Response, request: Union[UserRequest, None] = UserRequest()):
+@app.post("/users", response_model=UserResponse)
+async def create_user(r: Response, request: UserRequest = None):
+    if not request:
+        request = UserRequest()
     name = utils.get_random_name()
     age = 0
     password = utils.get_random_password()
@@ -39,7 +42,7 @@ async def create_user(r: Response, request: Union[UserRequest, None] = UserReque
         return {"message": "user name already exist"}
 
 
-@app.get("/users")
+@app.get("/users", response_model=UserResponse)
 async def find_user(r: Response,
                     name: Union[str, None] = None,
                     password: Union[str, None] = None,

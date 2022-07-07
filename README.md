@@ -75,4 +75,42 @@ $ docker pull ec_msusers:latest
 ``` bash
 $ docker run -d -p --name container_ec_msusers ${puerto}:80 ec_msusers 
 ```
+## Edpoints
 
+### /users
+
+#### POST
+
+``` json
+body request (opcional):
+{
+    "name": "str",
+    "password": "str",
+    "age": int
+}
+body response:
+{
+    "id": "str uuid",
+    "name": "str",
+    "age": int or null,
+    "token": "str",
+    "password": "str"
+}
+```
+
+#### GET
+``` json
+query params:
+name (str) : nombre del usuario
+password (str) : password del usuario
+token (str) : token del usuario
+body response:
+{
+    "id": "str uuid",
+    "name": "str",
+    "age": int or null,
+    "token": "str",
+    "password": "str"
+}
+```
+##### Para mayor información una vez ejecutando el proyecto entrar a la url: `{base_url}/docs`
