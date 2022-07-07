@@ -8,8 +8,9 @@ import utils
 
 from constans import MONGO_URL
 from models.requests import UserRequest
-from models.responses import UserResponse
+from models.responses import UserResponse, ErrorResponse
 from repositories import db
+from schemas_responses import user_response
 
 app = FastAPI()
 
@@ -19,7 +20,7 @@ client = pymongo.MongoClient(MONGO_URL)
 db_session = client.ecdb_comics
 
 
-@app.post("/users", response_model=UserResponse)
+@app.post("/users", responses={**user_response})
 async def create_user(r: Response, request: UserRequest = None):
     if not request:
         request = UserRequest()
@@ -39,10 +40,10 @@ async def create_user(r: Response, request: UserRequest = None):
     except Exception as e:
         logger.err(LOGGER_FILE_NAME, "create_user", f"error: {str(e)}")
         r.status_code = status.HTTP_409_CONFLICT
-        return {"message": "user name already exist"}
+        return ErrorResponse(message="user name already exist")
 
 
-@app.get("/users", response_model=UserResponse)
+@app.get("/users", responses={**user_response})
 async def find_user(r: Response,
                     name: Union[str, None] = None,
                     password: Union[str, None] = None,
@@ -56,5 +57,5 @@ async def find_user(r: Response,
         return response
     except Exception as e:
         logger.err(LOGGER_FILE_NAME, "find_user", f"error: {str(e)}")
-        r.status_code = status.HTTP_409_CONFLICT
-        return {"message": "user does not exist"}
+        r.status_code = status.HTTP_404_NOT_FOUND
+        return ErrorResponse(message="user does not exist")
